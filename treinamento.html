@@ -1,0 +1,256 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criação de Treinamento</title>
+    <script src="adicionartreino.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .navbar img {
+            width: 53px;
+            height: auto;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        .exercicio {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .series-table {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .series-table th {
+            background-color: #333;
+            color: #fff;
+            text-align: left;
+            padding: 10px;
+        }
+
+        .series-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .btn-add-serie {
+            background-color: #2aca2a;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .btn-add-serie:hover {
+            background-color: #009900;
+        }
+
+        .btn-add-exercicio {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .btn-add-exercicio:hover {
+            background-color: #000;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="navbar">
+        <div class="logo">
+            <img src="imagens/logo-removebg-preview.png" alt="Logo">
+        </div>
+    </div>
+    <header>
+        <h1>Criação de Treinamento</h1>
+    </header>
+    <div class="container">
+        <form>
+            <label for="titulo">Título do Treinamento:</label>
+            <input type="text" id="titulo" name="titulo">
+
+            <label for="descricao">Descrição:</label>
+            <textarea id="descricao" name="descricao" rows="4"></textarea>
+
+            <h2>Exercícios</h2>
+            <div id="exercicios">
+                <!-- Conteúdo da tabela de exercícios será adicionado dinamicamente aqui -->
+            </div>
+
+            <button class="btn-add-exercicio">Adicionar Exercício</button>
+            <button class="btn-salvar-treinamento">Salvar Treinamento</button>
+        </form>
+    </div>
+
+    <script>
+        // Função para adicionar um novo exercício
+        function adicionarExercicio() {
+            const exerciciosContainer = document.getElementById("exercicios");
+            const novoExercicio = document.createElement("div");
+            novoExercicio.className = "exercicio";
+
+            const tituloExercicio = document.createElement("input");
+            tituloExercicio.type = "text";
+            tituloExercicio.placeholder = "Título do Exercício";
+            tituloExercicio.required = true;
+
+            const seriesTable = document.createElement("table");
+            seriesTable.className = "series-table";
+            const tableHeader = seriesTable.createTHead();
+            const headerRow = tableHeader.insertRow();
+            headerRow.innerHTML = "<th>Número da Série</th><th>Peso</th><th>Repetições</th>";
+
+            // Adicionar a primeira linha na tabela de séries
+            adicionarSerie.call({ parentNode: seriesTable });
+
+            const btnAddSerie = document.createElement("button");
+            btnAddSerie.textContent = "Adicionar Série";
+            btnAddSerie.className = "btn-add-serie";
+            btnAddSerie.addEventListener("click", adicionarSerie);
+
+            novoExercicio.appendChild(tituloExercicio);
+            novoExercicio.appendChild(seriesTable);
+            novoExercicio.appendChild(btnAddSerie);
+
+            exerciciosContainer.appendChild(novoExercicio);
+        }
+
+        // Função para adicionar uma nova série
+        function adicionarSerie() {
+            const tableBody = this.parentNode.previousElementSibling.querySelector("tbody");
+            const novaLinha = tableBody.insertRow();
+
+            // Obter o número da última série e incrementar
+            let ultimaSerie = tableBody.rows.length;
+            let numeroSerie = ultimaSerie + 1;
+
+            const novaCelulaNumeroSerie = novaLinha.insertCell();
+            novaCelulaNumeroSerie.textContent = numeroSerie;
+
+            for (let i = 0; i < 2; i++) {
+                const novaCelula = novaLinha.insertCell();
+                const input = document.createElement("input");
+                input.type = "text";
+                novaCelula.appendChild(input);
+            }
+        }
+
+        // Função para salvar o treinamento
+        function salvarTreinamento() {
+            // Obter o título do treinamento e a descrição
+            const tituloTreinamento = document.getElementById("titulo").value;
+            const descricaoTreinamento = document.getElementById("descricao").value;
+
+            // Obter todos os exercícios
+            const exercicios = document.querySelectorAll(".exercicio");
+
+            // Criar uma estrutura de dados para armazenar os dados do treinamento
+            const treinamento = {
+                titulo: tituloTreinamento,
+                descricao: descricaoTreinamento,
+                exercicios: [],
+            };
+
+            // Iterar sobre cada exercício e obter os dados
+            exercicios.forEach((exercicioDiv) => {
+                const tituloExercicio = exercicioDiv.querySelector("input[type='text']").value;
+                const seriesTable = exercicioDiv.querySelector(".series-table");
+                const series = [];
+
+                // Obter dados de cada série na tabela
+                const rows = seriesTable.querySelectorAll("tbody tr");
+                rows.forEach((row) => {
+                    const numeroSerie = row.cells[0].textContent;
+                    const peso = row.cells[1].querySelector("input").value;
+                    const repeticoes = row.cells[2].querySelector("input").value;
+
+                    series.push({
+                        numeroSerie: numeroSerie,
+                        peso: peso,
+                        repeticoes: repeticoes,
+                    });
+                });
+
+                // Adicionar os dados do exercício ao treinamento
+                treinamento.exercicios.push({
+                    titulo: tituloExercicio,
+                    series: series,
+                });
+            });
+
+            // Exibir os dados do treinamento (você pode modificar isso para enviar para um servidor, por exemplo)
+            console.log("Dados do Treinamento:", treinamento);
+        }
+
+        // Adicionar listeners de eventos aos botões
+        const btnAddExercicio = document.querySelector(".btn-add-exercicio");
+        btnAddExercicio.addEventListener("click", adicionarExercicio);
+
+        const btnSalvarTreinamento = document.querySelector(".btn-salvar-treinamento");
+        btnSalvarTreinamento.addEventListener("click", salvarTreinamento);
+    </script>
+</body>
+</html>
